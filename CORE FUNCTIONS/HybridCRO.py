@@ -181,7 +181,7 @@ class CRO:
                 self.w * new_molecule[i].velocity
 
             new_molecule[i].structure = new_molecule[i].structure + new_molecule[i].velocity
-            new_molecule[0].update(self.data, new=False)
+            new_molecule[i].update(self.data, new=False)
 
         total_energy_left = molecule_1.PE + molecule_1.KE + molecule_2.PE + molecule_2.KE - \
             new_molecule[0].PE - new_molecule[1].PE
