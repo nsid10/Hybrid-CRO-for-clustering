@@ -1,7 +1,4 @@
 import numpy as np
-import pandas as pd
-from copy import deepcopy
-from math import factorial
 from sklearn.metrics import accuracy_score, f1_score
 
 
@@ -15,7 +12,7 @@ def squared_sum_error(centroids, labels, data):
     distances = 0
     for i, c in enumerate(centroids):
         idx = np.where(labels == i)
-        distances += np.sum((data[idx] - c)**2)
+        distances += np.sum((data[idx] - c) ** 2)
     return distances
 
 
@@ -41,6 +38,6 @@ def metrics(data, centroids, labels):
         final[block] = np.argmax(count)
 
     acc = accuracy_score(labels, final)
-    f1 = f1_score(labels, final, average='macro')
+    f1 = f1_score(labels, final, average="macro")
     sse = squared_sum_error(centroids, final, data)
     return acc, f1, sse

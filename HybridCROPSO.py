@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from sklearn.cluster import KMeans
 from copy import deepcopy
 
@@ -9,7 +8,7 @@ def calc_sse(centroids, labels, data):
     distances = 0
     for i, c in enumerate(centroids):
         idx = np.where(labels == i)
-        distances += np.sum((data[idx] - c)**2)
+        distances += np.sum((data[idx] - c) ** 2)
     return distances
 
 
@@ -23,6 +22,8 @@ def quantization_error(centroids, labels, data):
         error += dist
     error /= len(centroids)
     return error
+
+
 # SSE, Quantization error or another error funtion may be used as objective function
 
 
@@ -80,7 +81,23 @@ class Molecule:
 
 
 class CRO:
-    def __init__(self, n_clusters, n_molecules, data, max_generations, a, b, c1, c2, w, baseKE, MoleColl, KMeans=True, random_state=0, debug=0):
+    def __init__(
+        self,
+        n_clusters,
+        n_molecules,
+        data,
+        max_generations,
+        a,
+        b,
+        c1,
+        c2,
+        w,
+        baseKE,
+        MoleColl,
+        KMeans=True,
+        random_state=0,
+        debug=0,
+    ):
         self.n_clusters = n_clusters
         self.n_molecules = n_molecules
         self.data = data
@@ -176,15 +193,18 @@ class CRO:
         new_molecule = [deepcopy(molecule_1), deepcopy(molecule_2)]
 
         for i in range(2):
-            new_molecule[i].velocity = self.c1 * np.random.random() * (new_molecule[i].MinStruct - new_molecule[i].structure) + \
-                self.c2 * np.random.random() * (self.gbest_structure - new_molecule[i].structure) + \
-                self.w * new_molecule[i].velocity
+            new_molecule[i].velocity = (
+                self.c1 * np.random.random() * (new_molecule[i].MinStruct - new_molecule[i].structure)
+                + self.c2 * np.random.random() * (self.gbest_structure - new_molecule[i].structure)
+                + self.w * new_molecule[i].velocity
+            )
 
             new_molecule[i].structure = new_molecule[i].structure + new_molecule[i].velocity
             new_molecule[i].update(self.data, new=False)
 
-        total_energy_left = molecule_1.PE + molecule_1.KE + molecule_2.PE + molecule_2.KE - \
-            new_molecule[0].PE - new_molecule[1].PE
+        total_energy_left = (
+            molecule_1.PE + molecule_1.KE + molecule_2.PE + molecule_2.KE - new_molecule[0].PE - new_molecule[1].PE
+        )
 
         if total_energy_left >= 0:
             delta = np.random.uniform()
@@ -228,9 +248,11 @@ class CRO:
         molecule.NHits += 1
         new_molecule = deepcopy(molecule)
 
-        new_molecule.velocity = self.c1 * np.random.random() * (new_molecule.MinStruct - new_molecule.structure) + \
-            self.c2 * np.random.random() * (self.gbest_structure - new_molecule.structure) + \
-            self.w * new_molecule.velocity
+        new_molecule.velocity = (
+            self.c1 * np.random.random() * (new_molecule.MinStruct - new_molecule.structure)
+            + self.c2 * np.random.random() * (self.gbest_structure - new_molecule.structure)
+            + self.w * new_molecule.velocity
+        )
 
         new_molecule.structure = new_molecule.structure + new_molecule.velocity
 

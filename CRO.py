@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from sklearn.cluster import KMeans
 from copy import deepcopy
 
@@ -9,7 +8,7 @@ def calc_sse(centroids, labels, data):
     distances = 0
     for i, c in enumerate(centroids):
         idx = np.where(labels == i)
-        dist = np.sum((data[idx] - c)**2)
+        dist = np.sum((data[idx] - c) ** 2)
         distances += dist
     return distances
 
@@ -24,6 +23,8 @@ def quantization_error(centroids, labels, data):
         error += dist
     error /= len(centroids)
     return error
+
+
 # SSE, Quantization error or another error funtion may be used as objective function
 
 
@@ -78,7 +79,9 @@ class Molecule:
 
 
 class CRO:
-    def __init__(self, n_clusters, n_molecules, data, max_generations, a, b, baseKE, MoleColl=0.2, KMCRO=True, debug=0):
+    def __init__(
+        self, n_clusters, n_molecules, data, max_generations, a, b, baseKE, MoleColl=0.2, KMCRO=True, debug=0
+    ):
         self.n_clusters = n_clusters
         self.n_molecules = n_molecules
         self.data = data
@@ -171,13 +174,16 @@ class CRO:
 
         for i in range(2):
             index1, index2 = np.random.randint(0, self.features, size=2)
-            new_molecule[i].structure[index1], new_molecule[i].structure[index2] = \
-                new_molecule[i].structure[index2], new_molecule[i].structure[index1]
+            new_molecule[i].structure[index1], new_molecule[i].structure[index2] = (
+                new_molecule[i].structure[index2],
+                new_molecule[i].structure[index1],
+            )
 
         new_molecule[0].update(self.data, False)
         new_molecule[1].update(self.data, False)
-        total_energy_left = molecule_1.PE + molecule_1.KE + molecule_2.PE + \
-            molecule_2.KE - new_molecule[0].PE - new_molecule[1].PE
+        total_energy_left = (
+            molecule_1.PE + molecule_1.KE + molecule_2.PE + molecule_2.KE - new_molecule[0].PE - new_molecule[1].PE
+        )
 
         if total_energy_left >= 0:
             delta = np.random.uniform()
@@ -222,8 +228,10 @@ class CRO:
         new_molecule = deepcopy(molecule)
 
         index1, index2 = np.random.randint(0, self.features, size=2)
-        new_molecule.structure[index1], new_molecule.structure[index2] = \
-            new_molecule.structure[index2], new_molecule.structure[index1]
+        new_molecule.structure[index1], new_molecule.structure[index2] = (
+            new_molecule.structure[index2],
+            new_molecule.structure[index1],
+        )
 
         new_molecule.update(self.data, False)
         total_energy_left = molecule.PE + molecule.KE - new_molecule.PE

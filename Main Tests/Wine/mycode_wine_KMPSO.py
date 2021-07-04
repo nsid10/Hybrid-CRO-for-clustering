@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from time import time
-from HybridCRO import *
+from PSO import *
 from utilities import *
 
 t1 = time()
@@ -22,24 +22,16 @@ for seed in range(runs):
 
     clusters = 3
 
-    cube = CRO(n_clusters=clusters,
-               n_molecules=25,
-               data=x_data,
-               max_generations=800,
-               a=20,
-               b=5,
-               c1=1.49,
-               c2=1.49,
-               w=0.4,
-               baseKE=800,
-               MoleColl=0.4,
-               KMeans=True,
-               random_state=seed,
-               debug=0)
-    cube.run()
+    pso = PSO(n_cluster=clusters,
+              n_particles=10,
+              data=x_data,
+              hybrid=True,
+              max_iter=200,
+              random_state=seed,
+              print_debug=0)
+    pso.run()
 
-    b_structure = deepcopy(cube.gbest_structure)
-    centroids = np.reshape(b_structure, (clusters, len(x_data[0]))).copy()
+    centroids = pso.gbest_centroids.copy()
 
     labels = []
     for y in y_data:
